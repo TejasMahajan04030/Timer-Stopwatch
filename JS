@@ -1,0 +1,78 @@
+let stopwatchInterval;
+let timerInterval;
+let elapsedSeconds = 0;
+let remainingSeconds = 0;
+
+function formatTime(seconds) {
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+}
+
+// Stopwatch Functions
+document.getElementById('start-stopwatch').addEventListener('click', () => {
+    document.getElementById('stop-stopwatch').disabled = false;
+    document.getElementById('reset-stopwatch').disabled = false;
+    document.getElementById('start-stopwatch').disabled = true;
+
+    stopwatchInterval = setInterval(() => {
+        elapsedSeconds++;
+        document.getElementById('timer-display').textContent = formatTime(elapsedSeconds);
+    }, 1000);
+});
+
+document.getElementById('stop-stopwatch').addEventListener('click', () => {
+    clearInterval(stopwatchInterval);
+    document.getElementById('start-stopwatch').disabled = false;
+    document.getElementById('stop-stopwatch').disabled = true;
+});
+
+document.getElementById('reset-stopwatch').addEventListener('click', () => {
+    clearInterval(stopwatchInterval);
+    elapsedSeconds = 0;
+    document.getElementById('timer-display').textContent = '00:00:00';
+    document.getElementById('start-stopwatch').disabled = false;
+    document.getElementById('stop-stopwatch').disabled = true;
+    document.getElementById('reset-stopwatch').disabled = true;
+});
+
+// Timer Functions
+document.getElementById('start-timer').addEventListener('click', () => {
+    const minutes = parseInt(document.getElementById('timer-minutes').value) || 0;
+    const seconds = parseInt(document.getElementById('timer-seconds').value) || 0;
+    remainingSeconds = (minutes * 60) + seconds;
+
+    if (remainingSeconds > 0) {
+        document.getElementById('start-timer').disabled = true;
+        document.getElementById('stop-timer').disabled = false;
+        document.getElementById('reset-timer').disabled = false;
+
+        timerInterval = setInterval(() => {
+            remainingSeconds--;
+            document.getElementById('timer-display').textContent = formatTime(remainingSeconds);
+            if (remainingSeconds <= 0) {
+                clearInterval(timerInterval);
+                alert('Time is up!');
+                document.getElementById('start-timer').disabled = false;
+                document.getElementById('stop-timer').disabled = true;
+                document.getElementById('reset-timer').disabled = true;
+            }
+        }, 1000);
+    }
+});
+
+document.getElementById('stop-timer').addEventListener('click', () => {
+    clearInterval(timerInterval);
+    document.getElementById('start-timer').disabled = false;
+    document.getElementById('stop-timer').disabled = true;
+});
+
+document.getElementById('reset-timer').addEventListener('click', () => {
+    clearInterval(timerInterval);
+    remainingSeconds = 0;
+    document.getElementById('timer-display').textContent = '00:00:00';
+    document.getElementById('start-timer').disabled = false;
+    document.getElementById('stop-timer').disabled = true;
+    document.getElementById('reset-timer').disabled = true;
+});
